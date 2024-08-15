@@ -15,19 +15,16 @@
 #
 
 
-from sqlalchemy import Column, Integer, String, BigInteger
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, BigInteger, Boolean, DateTime
 
 from database.models.base import BaseModel
-from utils.config import DEFAULT_DAILY_TASKS_LIMIT
 
 
-class UserModel(BaseModel):
-    __tablename__ = 'users'
+class GroupModel(BaseModel):
+    __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, index=True)
-    tg_user_id = Column(BigInteger, unique=True)
+    chat_id = Column(BigInteger, unique=True)
     username = Column(String(256))
-    balance = Column(BigInteger, default=0)
-    daily_tasks_limit = Column(Integer, default=DEFAULT_DAILY_TASKS_LIMIT)
-
-    tasks = relationship(argument='TaskModel', back_populates='user')
+    subscribers = Column(Integer, default=0)
+    have_capcha = Column(Boolean, default=False)
+    last_check = Column(DateTime, default=None, nullable=True)

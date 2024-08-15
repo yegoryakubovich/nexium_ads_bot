@@ -15,16 +15,24 @@
 #
 
 
-from yaml import safe_load
-from pydantic import BaseModel
+from json import load
+
+from pydantic import BaseModel, Field
 
 
 class Texts(BaseModel):
+    register_: str = Field(alias='register')
     start: str
+    balance: str
+
+    bt_balance: str
+
+    bt_tasks_start: str
+    tasks_start_limit: str
 
 
-with open('texts.yaml', 'r', encoding='utf-8') as file:
-    data = safe_load(file)
+with open('texts.json', 'r', encoding='utf-8') as file:
+    data = load(file)
 
 
 texts = Texts(**data)

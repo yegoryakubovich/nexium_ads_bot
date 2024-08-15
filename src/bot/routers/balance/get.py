@@ -15,38 +15,35 @@
 #
 
 
-from aiogram.filters import Command
+from aiogram import F
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.database import db_session
 from database.repositories.user import UserRepository
-from utils import States, texts
+from utils import texts, States
+from utils.config import ADMIN_USERNAME
 from utils.keyboards import main
 from utils.router import Router
 
 
-router = Router(
-    name=__name__,
-)
+router = Router(name=__name__)
 
 
-@router.message(Command('start', 'restart'))
+@router.message(F.text == texts.bt_balance, States.MAIN)
 @db_session
-async def start(message: Message, state: FSMContext, session: AsyncSession) -> None:
+async def balance(message: Message, state: FSMContext, session: AsyncSession) -> None:
     tg_user_id = message.from_user.id
 
     user_repo = UserRepository(session=session)
     user = await user_repo.get_by(obj_in={'tg_user_id': tg_user_id})
-    if not user:
-        await user_repo.create(
-            obj_in={
-                'tg_user_id':tg_user_id,
-                'username': message.from_user.username,
-            },
-        )
-        await message.reply(text=texts.register_)
 
-    await state.set_state(state=States.MAIN)
-    await message.answer(text=texts.start, reply_markup=main)
+    await state.set_state(States.BALANCE)
+    await message.answer(
+        text=texts.balance.format(
+            balance=user.balance,
+            admin_username=ADMIN_USERNAME,
+        ),
+        reply_markup=main,
+    )

@@ -15,6 +15,11 @@
 #
 
 
+from .user import UserModel
+from .group import GroupModel
+from .ad import AdModel
+from .task import TaskModel
+
 def get_base_model():
     from .base import BaseModel
     return BaseModel

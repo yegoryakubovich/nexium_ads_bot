@@ -22,13 +22,13 @@ from sys import stdout
 from aiogram import Dispatcher
 
 from database.database import init_db
-from routers import routers
+from routers import router
 from utils.bot import bot
 from utils.states import storage
 
 
 dp = Dispatcher(storage=storage)
-dp.include_routers(*routers)
+dp.include_router(router=router)
 
 
 async def main() -> None:

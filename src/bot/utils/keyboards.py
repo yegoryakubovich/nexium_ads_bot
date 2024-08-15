@@ -25,9 +25,9 @@ class Rkm(ReplyKeyboardMarkup):
         super().__init__(**kwargs, resize_keyboard=True)
 
 
-main_keyboard = Rkm(
+main = Rkm(
     keyboard=[
-        [Kb(text=texts.main_kb_bt_2), Kb(text=texts.main_kb_bt_4)],
-        [Kb(text=texts.bt_consultation)],
+        [Kb(text=texts.bt_tasks_start)],
+        [Kb(text=texts.bt_balance)],
     ],
 )

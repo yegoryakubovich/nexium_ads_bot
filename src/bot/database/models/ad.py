@@ -15,19 +15,23 @@
 #
 
 
-from sqlalchemy import Column, Integer, String, BigInteger
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String
 
 from database.models.base import BaseModel
-from utils.config import DEFAULT_DAILY_TASKS_LIMIT
 
 
-class UserModel(BaseModel):
-    __tablename__ = 'users'
+class AdModel(BaseModel):
+    __tablename__ = 'ads'
     id = Column(Integer, primary_key=True, index=True)
-    tg_user_id = Column(BigInteger, unique=True)
-    username = Column(String(256))
-    balance = Column(BigInteger, default=0)
-    daily_tasks_limit = Column(Integer, default=DEFAULT_DAILY_TASKS_LIMIT)
-
-    tasks = relationship(argument='TaskModel', back_populates='user')
+    text_1 = Column(String(1024))
+    text_2 = Column(String(1024))
+    text_3 = Column(String(1024))
+    image_1 = Column(String(16))
+    image_2 = Column(String(16))
+    image_3 = Column(String(16))
+    button_1_text = Column(String(32))
+    button_1_url = Column(String(32))
+    button_2_text = Column(String(32))
+    button_2_url = Column(String(32))
+    button_3_text = Column(String(32))
+    button_3_url = Column(String(32))

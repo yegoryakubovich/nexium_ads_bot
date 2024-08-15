@@ -15,17 +15,30 @@
 #
 
 
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
 
 from database.models.base import BaseModel
 
 
 class TaskModel(BaseModel):
-    __tablename__ = "tasks"
+    __tablename__ = 'tasks'
     id = Column(Integer, primary_key=True, index=True)
 
+    ad_id = Column(Integer, ForeignKey('ads.id'))
+    ad = relationship(argument='AdModel', lazy='selectin')
     user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship(argument='UserModel', back_populates='tasks', lazy='selectin')
+    user = relationship(argument='UserModel', lazy='selectin')
+    group_id = Column(Integer, ForeignKey('groups.id'))
+    group = relationship(argument='GroupModel', lazy='selectin')
+
+    text = Column(Integer)
+    image = Column(Integer)
+    button = Column(Boolean)
 
     datetime = Column(DateTime)
+    datetime_user_confirmed = Column(DateTime, nullable=True, default=None)
+    datetime_auto_confirmed = Column(DateTime, nullable=True, default=None)
+    datetime_auto_confirmed_10m = Column(DateTime, nullable=True, default=None)
+    datetime_auto_confirmed_30m = Column(DateTime, nullable=True, default=None)
+    datetime_auto_confirmed_1h = Column(DateTime, nullable=True, default=None)
