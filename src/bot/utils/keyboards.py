@@ -15,7 +15,7 @@
 #
 
 
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton as Kb
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton as Kb, InlineKeyboardMarkup, InlineKeyboardButton
 
 from utils import texts
 
@@ -29,5 +29,27 @@ main = Rkm(
     keyboard=[
         [Kb(text=texts.bt_tasks_start)],
         [Kb(text=texts.bt_balance)],
+        [Kb(text=texts.bt_referral)],
+        [Kb(text=texts.bt_bug)],
     ],
 )
+balance = Rkm(
+    keyboard=[
+        [Kb(text=texts.bt_balance_withdrawal)],
+        [Kb(text=texts.bt_back)],
+    ],
+)
+
+
+def create_ad_kb(buttons: dict) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=text,
+                    url=url,
+                )
+            ] for text, url in buttons.items()
+        ]
+    )
+

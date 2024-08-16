@@ -15,16 +15,12 @@
 #
 
 
-from utils.router import Router
-from .get import router as router_get
-from .create_withdrawal import router as router_withdrawal_create
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from database.models.ad import AdModel
+from database.repositories.base import BaseRepository
 
 
-router = Router(
-    name=__name__,
-    routes_included=[
-        router_get,
-        router_withdrawal_create,
-    ],
-)
-
+class AdRepository(BaseRepository[AdModel]):
+    def __init__(self, session: AsyncSession):
+        super().__init__(AdModel, session)

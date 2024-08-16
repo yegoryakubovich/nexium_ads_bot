@@ -23,12 +23,29 @@ from pydantic import BaseModel, Field
 class Texts(BaseModel):
     register_: str = Field(alias='register')
     start: str
-    balance: str
 
-    bt_balance: str
+    bt_back: str
+
 
     bt_tasks_start: str
+    bt_balance: str
+    bt_referral: str
+    bt_bug: str
+
+    bt_next_task: str
+    bt_task_completed: str
+    bt_skip_task: str
+    bt_task_problem: str
+    task_problems: str
     tasks_start_limit: str
+
+    balance: str
+    bt_balance_withdrawal: str
+    balance_withdrawal: str
+
+    referral: str
+
+    bug: str
 
 
 with open('texts.json', 'r', encoding='utf-8') as file:

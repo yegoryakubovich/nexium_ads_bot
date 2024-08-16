@@ -19,13 +19,17 @@ from utils.router import Router
 from .start import router as router_start
 from .balance import router as router_balance
 from .tasks import router as router_tasks
+from .referral import router as router_referral
+from .bug import router as router_bug
 
 
 router = Router(
     name=__name__,
     routes_included=[
         router_start,
-        router_balance,
         router_tasks,
+        router_balance,
+        router_referral,
+        router_bug,
     ],
 )

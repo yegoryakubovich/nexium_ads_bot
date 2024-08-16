@@ -15,16 +15,21 @@
 #
 
 
+from aiogram import F
+from aiogram.types import Message
+
+from utils import texts, States
+from utils.config import ADMIN_USERNAME
 from utils.router import Router
-from .get import router as router_get
-from .create_withdrawal import router as router_withdrawal_create
 
 
-router = Router(
-    name=__name__,
-    routes_included=[
-        router_get,
-        router_withdrawal_create,
-    ],
-)
+router = Router(name=__name__)
 
+
+@router.message(F.text == texts.bt_bug, States.MAIN)
+async def get(message: Message) -> None:
+    await message.answer(
+        text=texts.bug.format(
+            admin_username=ADMIN_USERNAME,
+        ),
+    )

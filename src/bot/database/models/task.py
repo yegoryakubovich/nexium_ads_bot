@@ -15,15 +15,26 @@
 #
 
 
-from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean
+from enum import Enum
+
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Boolean, String
 from sqlalchemy.orm import relationship
 
 from database.models.base import BaseModel
 
 
+class TaskStateEnum(Enum):
+    IN_PROGRESS = 'IN_PROGRESS'
+    PENDING_CONFIRMATION = 'PENDING_CONFIRMATION'
+    COMPLETED = 'COMPLETED'
+    FAILED = 'FAILED'
+    SKIPPED = 'SKIPPED'
+
+
 class TaskModel(BaseModel):
     __tablename__ = 'tasks'
     id = Column(Integer, primary_key=True, index=True)
+    state = Column(String(16), default=TaskStateEnum.IN_PROGRESS)
 
     ad_id = Column(Integer, ForeignKey('ads.id'))
     ad = relationship(argument='AdModel', lazy='selectin')
@@ -31,6 +42,7 @@ class TaskModel(BaseModel):
     user = relationship(argument='UserModel', lazy='selectin')
     group_id = Column(Integer, ForeignKey('groups.id'))
     group = relationship(argument='GroupModel', lazy='selectin')
+    cost = Column(Integer)
 
     text = Column(Integer)
     image = Column(Integer)

@@ -17,14 +17,12 @@
 
 from utils.router import Router
 from .get import router as router_get
-from .create_withdrawal import router as router_withdrawal_create
 
 
 router = Router(
     name=__name__,
     routes_included=[
         router_get,
-        router_withdrawal_create,
     ],
 )
 
