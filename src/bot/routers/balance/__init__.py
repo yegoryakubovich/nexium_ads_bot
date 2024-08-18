@@ -18,6 +18,7 @@
 from utils.router import Router
 from .get import router as router_get
 from .create_withdrawal import router as router_withdrawal_create
+from .back import router as router_back
 
 
 router = Router(
@@ -25,6 +26,7 @@ router = Router(
     routes_included=[
         router_get,
         router_withdrawal_create,
+        router_back,
     ],
 )
 

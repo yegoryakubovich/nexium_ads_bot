@@ -21,27 +21,37 @@ from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.database import db_session
+from database.models.task import TaskStateEnum
+from database.repositories.task import TaskRepository
 from database.repositories.user import UserRepository
+from routers.tasks.create_task import create_task
 from utils import texts, States
-from utils.keyboards import kb_balance
+from utils.keyboards import kb_main
 from utils.router import Router
 
 
 router = Router(name=__name__)
 
 
-@router.message(F.text == texts.bt_balance, States.MAIN)
+@router.message(F.text == texts.bt_task_skip, States.TASKS)
 @db_session
-async def get(message: Message, state: FSMContext, session: AsyncSession) -> None:
-    tg_user_id = message.from_user.id
-
+async def mark_as_complete(message: Message, state: FSMContext, session: AsyncSession) -> None:
     user_repo = UserRepository(session=session)
-    user = await user_repo.get_by(obj_in={'tg_user_id': tg_user_id})
+    task_repo = TaskRepository(session=session)
 
-    await state.set_state(States.BALANCE)
-    await message.answer(
-        text=texts.balance.format(
-            balance=user.balance,
-        ),
-        reply_markup=kb_balance,
-    )
+    user = await user_repo.get_by(obj_in={'tg_user_id': message.from_user.id})
+    tasks = await task_repo.get_current(user=user)
+
+    if tasks:
+        for t in tasks:
+            await task_repo.update(
+                id_=t.id,
+                obj_in={
+                    'state': TaskStateEnum.SKIPPED,
+                },
+            )
+        await message.answer(text=texts.task_skipped)
+        await create_task(message=message, state=state, session=session)
+    else:
+        await state.set_state(States.MAIN)
+        await message.answer(text=texts.task_skipped_error, reply_markup=kb_main)

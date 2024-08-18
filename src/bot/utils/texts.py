@@ -25,19 +25,26 @@ class Texts(BaseModel):
     start: str
 
     bt_back: str
-
+    back: str
 
     bt_tasks_start: str
     bt_balance: str
     bt_referral: str
     bt_bug: str
 
-    bt_next_task: str
-    bt_task_completed: str
-    bt_skip_task: str
-    bt_task_problem: str
-    task_problems: str
+    bt_task_mark_as_complete: str
+    task_mark_as_complete: str
+    task_mark_as_complete_error: str
+    bt_task_skip: str
+    task_skipped: str
+    task_skipped_error: str
+    bt_task_have_problems: str
+    task_have_problems: str
     tasks_start_limit: str
+    task_1: str
+    task_2: str
+    bt_task_group: str
+    bt_task_message: str
 
     balance: str
     bt_balance_withdrawal: str

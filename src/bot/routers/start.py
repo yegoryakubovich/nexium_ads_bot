@@ -23,7 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.database import db_session
 from database.repositories.user import UserRepository
 from utils import States, texts
-from utils.keyboards import main
+from utils.keyboards import kb_main
 from utils.router import Router
 
 
@@ -49,4 +49,4 @@ async def start(message: Message, state: FSMContext, session: AsyncSession) -> N
         await message.reply(text=texts.register_)
 
     await state.set_state(state=States.MAIN)
-    await message.answer(text=texts.start, reply_markup=main)
+    await message.answer(text=texts.start, reply_markup=kb_main)

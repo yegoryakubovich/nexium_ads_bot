@@ -34,7 +34,7 @@ class TaskStateEnum(Enum):
 class TaskModel(BaseModel):
     __tablename__ = 'tasks'
     id = Column(Integer, primary_key=True, index=True)
-    state = Column(String(16), default=TaskStateEnum.IN_PROGRESS)
+    state = Column(String(64), default=TaskStateEnum.IN_PROGRESS)
 
     ad_id = Column(Integer, ForeignKey('ads.id'))
     ad = relationship(argument='AdModel', lazy='selectin')
@@ -44,9 +44,10 @@ class TaskModel(BaseModel):
     group = relationship(argument='GroupModel', lazy='selectin')
     cost = Column(Integer)
 
-    text = Column(Integer)
-    image = Column(Integer)
-    button = Column(Boolean)
+    text = Column(String(1024))
+    image = Column(String(16))
+    have_keyboard = Column(Boolean)
+    message_url = Column(String(128))
 
     datetime = Column(DateTime)
     datetime_user_confirmed = Column(DateTime, nullable=True, default=None)

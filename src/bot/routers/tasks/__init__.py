@@ -17,12 +17,20 @@
 
 from utils.router import Router
 from .start import router as router_start
+from .have_problems import router as router_have_problems
+from .mark_as_complete import router as router_mark_as_complete
+from .skip import router as router_skip
+from .back import router as router_back
 
 
 router = Router(
     name=__name__,
     routes_included=[
         router_start,
+        router_mark_as_complete,
+        router_have_problems,
+        router_skip,
+        router_back,
     ],
 )
 

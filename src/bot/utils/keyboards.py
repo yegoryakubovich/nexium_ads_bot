@@ -25,7 +25,7 @@ class Rkm(ReplyKeyboardMarkup):
         super().__init__(**kwargs, resize_keyboard=True)
 
 
-main = Rkm(
+kb_main = Rkm(
     keyboard=[
         [Kb(text=texts.bt_tasks_start)],
         [Kb(text=texts.bt_balance)],
@@ -33,9 +33,16 @@ main = Rkm(
         [Kb(text=texts.bt_bug)],
     ],
 )
-balance = Rkm(
+kb_balance = Rkm(
     keyboard=[
         [Kb(text=texts.bt_balance_withdrawal)],
+        [Kb(text=texts.bt_back)],
+    ],
+)
+kb_task = Rkm(
+    keyboard=[
+        [Kb(text=texts.bt_task_mark_as_complete)],
+        [Kb(text=texts.bt_task_skip), Kb(text=texts.bt_task_have_problems)],
         [Kb(text=texts.bt_back)],
     ],
 )
@@ -50,6 +57,25 @@ def create_ad_kb(buttons: dict) -> InlineKeyboardMarkup:
                     url=url,
                 )
             ] for text, url in buttons.items()
+        ]
+    )
+
+
+def create_task_kb(group_url: str, message_url: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=texts.bt_task_group,
+                    url=group_url,
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text=texts.bt_task_message,
+                    url=message_url,
+                ),
+            ],
         ]
     )
 

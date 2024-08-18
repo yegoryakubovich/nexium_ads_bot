@@ -20,7 +20,8 @@ from typing import List
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.models.task import TaskModel
+from database.models.user import UserModel
+from database.models.task import TaskModel, TaskStateEnum
 from database.repositories.base import BaseRepository
 
 
@@ -35,6 +36,14 @@ class TaskRepository(BaseRepository[TaskModel]):
                 'user_id': user_id,
                 'datetime >=': now.replace(hour=0, minute=0, second=0, microsecond=0),
                 'datetime <=': (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0),
+            },
+        )
+
+    async def get_current(self, user: UserModel):
+        return await self.get_all_by(
+            obj_in={
+                'user_id': user.id,
+                'state': TaskStateEnum.IN_PROGRESS,
             },
         )
 
