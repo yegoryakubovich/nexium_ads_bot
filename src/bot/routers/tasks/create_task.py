@@ -95,14 +95,12 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
                 photo=FSInputFile(path=f'static/images/{ad_image}'),
                 caption=ad_text,
                 reply_markup=ad_keyboard,
-                protect_content=True,
             )
         else:
             ad_message = await ad_bot.send_message(
                 chat_id=ad.group_id,
                 text=ad_text,
                 reply_markup=ad_keyboard,
-                protect_content=True,
             )
 
     ad_message_url = f'https://t.me/{ad.group_username}/{ad_message.message_id}'

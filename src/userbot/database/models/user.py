@@ -15,26 +15,19 @@
 #
 
 
-from enum import Enum
-
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, BigInteger
+from sqlalchemy.orm import relationship
 
 from database.models.base import BaseModel
+from utils.config import DEFAULT_DAILY_TASKS_LIMIT
 
 
-class GroupStateEnum(Enum):
-    PENDING_CONFIRMATION = 'WAITING_FOR_CHECK'
-    ACTIVE = 'ACTIVE'
-    INACTIVE = 'INACTIVE' # ЕСЛИ НЕ ПОДПИСАН НА НЕЕ9
-
-
-class GroupModel(BaseModel):
-    __tablename__ = 'groups'
+class UserModel(BaseModel):
+    __tablename__ = 'users'
     id = Column(Integer, primary_key=True, index=True)
-    state = Column(String(64), default=GroupStateEnum.PENDING_CONFIRMATION)
-
-    chat_id = Column(BigInteger, unique=True)
+    tg_user_id = Column(BigInteger, unique=True)
     username = Column(String(256))
-    subscribers = Column(Integer, default=0)
-    have_capcha = Column(Boolean, default=False)
-    last_check = Column(DateTime, default=None, nullable=True)
+    balance = Column(BigInteger, default=0)
+    daily_tasks_limit = Column(Integer, default=DEFAULT_DAILY_TASKS_LIMIT)
+
+    tasks = relationship(argument='TaskModel', back_populates='user')

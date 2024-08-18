@@ -3,3 +3,4 @@ __pycache__
 .idea
 *.session
 /src/bot/static/images/*
+*.session-journal

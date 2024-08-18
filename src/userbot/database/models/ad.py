@@ -15,26 +15,26 @@
 #
 
 
-from enum import Enum
-
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, BigInteger
 
 from database.models.base import BaseModel
 
 
-class GroupStateEnum(Enum):
-    PENDING_CONFIRMATION = 'WAITING_FOR_CHECK'
-    ACTIVE = 'ACTIVE'
-    INACTIVE = 'INACTIVE' # ЕСЛИ НЕ ПОДПИСАН НА НЕЕ9
-
-
-class GroupModel(BaseModel):
-    __tablename__ = 'groups'
+class AdModel(BaseModel):
+    __tablename__ = 'ads'
     id = Column(Integer, primary_key=True, index=True)
-    state = Column(String(64), default=GroupStateEnum.PENDING_CONFIRMATION)
-
-    chat_id = Column(BigInteger, unique=True)
-    username = Column(String(256))
-    subscribers = Column(Integer, default=0)
-    have_capcha = Column(Boolean, default=False)
-    last_check = Column(DateTime, default=None, nullable=True)
+    bot_token = Column(String(128))
+    group_id = Column(BigInteger)
+    group_username = Column(String(128))
+    text_1 = Column(String(1024))
+    text_2 = Column(String(1024))
+    text_3 = Column(String(1024))
+    image_1 = Column(String(16))
+    image_2 = Column(String(16))
+    image_3 = Column(String(16))
+    button_1_text = Column(String(32))
+    button_1_url = Column(String(32))
+    button_2_text = Column(String(32))
+    button_2_url = Column(String(32))
+    button_3_text = Column(String(32))
+    button_3_url = Column(String(32))
