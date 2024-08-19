@@ -18,7 +18,7 @@ from random import choice, randint
 
 from pyrogram import Client
 from pyrogram.enums import ChatType
-from pyrogram.errors import UsernameNotOccupied
+from pyrogram.errors import UsernameNotOccupied, InviteRequestSent, UserNotParticipant
 from pyrogram.raw.functions.folders import EditPeerFolders
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -51,7 +51,15 @@ async def check_group(client: Client, session: AsyncSession):
     if not chat.username:
         return
 
-    await client.join_chat(chat_id=chat.username)
+    try:
+        await client.get_chat_member(chat_id=chat.id, user_id='me')
+    except UserNotParticipant:
+        try:
+            await client.join_chat(chat_id=chat.username)
+        except InviteRequestSent:
+            return
+        except:
+            return
 
     await group_repo.update(
         id_=group_to_check.id,
@@ -68,5 +76,5 @@ async def check_group(client: Client, session: AsyncSession):
 async def checking_groups(app: Client, session: AsyncSession):
     while True:
         await check_group(client=app, session=session)
-        await sleep(randint(180, 1200))
+        await sleep(randint(180, 320))
 
