@@ -50,7 +50,5 @@ async def mark_as_complete(message: Message, state: FSMContext, session: AsyncSe
                 },
             )
         await message.answer(text=texts.task_mark_as_complete)
-    else:
-        await state.set_state(States.MAIN)
 
     await create_task(message=message, state=state, session=session)

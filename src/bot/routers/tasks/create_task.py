@@ -25,6 +25,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, FSInputFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from database.models.group import GroupState
 from database.repositories.ad import AdRepository
 from database.repositories.group import GroupRepository
 from database.repositories.task import TaskRepository
@@ -32,7 +33,6 @@ from database.repositories.user import UserRepository
 from utils import texts, States
 from utils.config import ADMIN_USERNAME, COST
 from utils.keyboards import create_ad_kb, create_task_kb, kb_task
-
 
 
 async def create_task(message: Message, state: FSMContext, session: AsyncSession) -> None:
@@ -80,7 +80,7 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
         }
     ) if random() < 0.6 else None
 
-    groups = await group_repo.get_all()
+    groups = await group_repo.get_all_by(obj_in={'state': GroupState.ACTIVE})
     group = choice(groups)
 
     async with Bot(

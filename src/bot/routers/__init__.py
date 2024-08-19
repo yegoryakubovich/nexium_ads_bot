@@ -21,12 +21,14 @@ from .balance import router as router_balance
 from .tasks import router as router_tasks
 from .referral import router as router_referral
 from .bug import router as router_bug
+from .admin_commands import router as router_admin_commands
 
 
 router = Router(
     name=__name__,
     routes_included=[
         router_start,
+        router_admin_commands,
         router_tasks,
         router_balance,
         router_referral,

@@ -56,7 +56,6 @@ async def new_message(client: Client, message: Message, session: AsyncSession):
     print(message)
 
     for task in tasks:
-        print(task.id)
         if message.forward_from.username != task.ad.bot_username:
             continue
 
@@ -64,8 +63,12 @@ async def new_message(client: Client, message: Message, session: AsyncSession):
             continue
 
         if task.text:
-            if task.text != message.text:
-                continue
+            if task.image:
+                if task.text != message.caption:
+                    continue
+            else:
+                if task.text != message.text:
+                    continue
 
         if task.image:
             if message.photo is None:

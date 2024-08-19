@@ -15,20 +15,14 @@
 #
 
 
-from dotenv import load_dotenv
-from os import getenv
+from utils.router import Router
+from .add_groups import router as router_add_groups
 
 
-load_dotenv()
+router = Router(
+    name=__name__,
+    routes_included=[
+        router_add_groups,
+    ],
+)
 
-
-DATABASE_URL = getenv('DATABASE_URL')
-REDIS_URL = getenv('REDIS_URL')
-BOT_TOKEN = getenv('BOT_TOKEN')
-BOT_USERNAME = getenv('BOT_USERNAME')
-ADMIN_USERNAME = getenv('ADMIN_USERNAME')
-ADMIN_TG_USER_ID = int(getenv('ADMIN_TG_USER_ID'))
-USER_ID = getenv('USER_ID')
-USER_HASH = getenv('USER_HASH')
-DEFAULT_DAILY_TASKS_LIMIT = getenv('DEFAULT_DAILY_TASKS_LIMIT')
-COST = getenv('COST')
