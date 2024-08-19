@@ -20,7 +20,6 @@ import asyncio
 from pyrogram import Client
 from pyrogram.handlers import MessageHandler
 
-from tasks.checkin_groups import checking_groups
 from tasks.new_message_handler import new_message
 from utils.config import USER_ID, USER_HASH
 
@@ -29,7 +28,7 @@ TASKS = []
 HANDLERS = [MessageHandler(new_message)]
 
 
-async def task2(app):
+async def task1(app):
     async for dialog in app.get_dialogs():
         await asyncio.sleep(2)
 
@@ -42,12 +41,11 @@ async def main():
         device_model='Nexium Ads User Bot',
         app_version='v 1.0',
     ) as app:
-        task_1 = asyncio.create_task(checking_groups(app))
-        task_2 = asyncio.create_task(task2(app))
+        task_1 = asyncio.create_task(task1(app))
 
         app.add_handler(MessageHandler(new_message))
 
-        await asyncio.gather(task_1, task_2)
+        await asyncio.gather(task_1)
 
 
 asyncio.run(main())

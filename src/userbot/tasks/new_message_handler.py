@@ -15,6 +15,7 @@
 #
 
 
+import logging
 from datetime import datetime
 
 from pyrogram import Client
@@ -53,7 +54,7 @@ async def new_message(client: Client, message: Message, session: AsyncSession):
     if not tasks:
         return
 
-    print(message)
+    logging.warning(message)
 
     for task in tasks:
         if message.forward_from.username != task.ad.bot_username:
