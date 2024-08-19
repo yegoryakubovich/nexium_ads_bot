@@ -1,6 +1,18 @@
 services:
   bot:
-    build: .
+    build:
+      context: .
+      dockerfile: /src/bot/Dockerfile
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    restart: always
+    working_dir: /app/src/bot
+  userbot:
+    build:
+      context: .
+      dockerfile: /src/userbot/Dockerfile
     env_file:
       - .env
     volumes:

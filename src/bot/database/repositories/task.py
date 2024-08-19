@@ -21,7 +21,7 @@ from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.models.user import UserModel
-from database.models.task import TaskModel, TaskStateEnum
+from database.models.task import TaskModel, TaskState
 from database.repositories.base import BaseRepository
 
 
@@ -43,7 +43,7 @@ class TaskRepository(BaseRepository[TaskModel]):
         return await self.get_all_by(
             obj_in={
                 'user_id': user.id,
-                'state': TaskStateEnum.IN_PROGRESS,
+                'state': TaskState.IN_PROGRESS,
             },
         )
 

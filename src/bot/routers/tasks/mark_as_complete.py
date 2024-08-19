@@ -21,12 +21,11 @@ from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.database import db_session
-from database.models.task import TaskStateEnum
+from database.models.task import TaskState
 from database.repositories.task import TaskRepository
 from database.repositories.user import UserRepository
 from routers.tasks.create_task import create_task
 from utils import texts, States
-from utils.keyboards import kb_main
 from utils.router import Router
 
 
@@ -47,11 +46,11 @@ async def mark_as_complete(message: Message, state: FSMContext, session: AsyncSe
             await task_repo.update(
                 id_=t.id,
                 obj_in={
-                    'state': TaskStateEnum.PENDING_CONFIRMATION,
+                    'state': TaskState.PENDING_CONFIRMATION,
                 },
             )
         await message.answer(text=texts.task_mark_as_complete)
-        await create_task(message=message, state=state, session=session)
     else:
         await state.set_state(States.MAIN)
-        await message.answer(text=texts.task_mark_as_complete_error, reply_markup=kb_main)
+
+    await create_task(message=message, state=state, session=session)

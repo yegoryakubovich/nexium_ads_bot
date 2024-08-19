@@ -1,2 +1,3 @@
 {
+  "task_completed": "✅ Задание TID {task_id} успешно выполнено. Начислено {cost} RUB."
 }

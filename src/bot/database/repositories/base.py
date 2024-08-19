@@ -37,7 +37,25 @@ class BaseRepository(Generic[ModelType]):
         return result.scalar_one_or_none()
 
     async def get_by(self, obj_in: dict) -> Optional[ModelType]:
-        conditions = [getattr(self.model, key) == value for key, value in obj_in.items()]
+        conditions = []
+        for key, value in obj_in.items():
+            if '>=' in key:
+                field = key.replace(" >=", "").strip()
+                conditions.append(getattr(self.model, field) >= value)
+            elif '>=' in key:
+                field = key.replace(" >", "").strip()
+                conditions.append(getattr(self.model, field) > value)
+            elif '<=' in key:
+                field = key.replace(" <=", "").strip()
+                conditions.append(getattr(self.model, field) <= value)
+            elif '<' in key:
+                field = key.replace(" <=", "").strip()
+                conditions.append(getattr(self.model, field) < value)
+            elif isinstance(value, (list, tuple, set)):
+                conditions.append(getattr(self.model, key).in_(value))
+            else:
+                conditions.append(getattr(self.model, key) == value)
+
         query = select(self.model).where(and_(*conditions))
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
@@ -57,6 +75,8 @@ class BaseRepository(Generic[ModelType]):
             elif '<' in key:
                 field = key.replace(" <=", "").strip()
                 conditions.append(getattr(self.model, field) < value)
+            elif isinstance(value, (list, tuple, set)):
+                conditions.append(getattr(self.model, key).in_(value))
             else:
                 conditions.append(getattr(self.model, key) == value)
 

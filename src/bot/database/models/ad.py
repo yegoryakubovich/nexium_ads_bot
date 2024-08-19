@@ -24,6 +24,7 @@ class AdModel(BaseModel):
     __tablename__ = 'ads'
     id = Column(Integer, primary_key=True, index=True)
     bot_token = Column(String(128))
+    bot_username = Column(String(128))
     group_id = Column(BigInteger)
     group_username = Column(String(128))
     text_1 = Column(String(1024))

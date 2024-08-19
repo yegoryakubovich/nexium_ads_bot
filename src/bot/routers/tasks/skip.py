@@ -21,7 +21,7 @@ from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.database import db_session
-from database.models.task import TaskStateEnum
+from database.models.task import TaskState
 from database.repositories.task import TaskRepository
 from database.repositories.user import UserRepository
 from routers.tasks.create_task import create_task
@@ -47,7 +47,7 @@ async def mark_as_complete(message: Message, state: FSMContext, session: AsyncSe
             await task_repo.update(
                 id_=t.id,
                 obj_in={
-                    'state': TaskStateEnum.SKIPPED,
+                    'state': TaskState.SKIPPED,
                 },
             )
         await message.answer(text=texts.task_skipped)

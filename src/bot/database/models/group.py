@@ -22,7 +22,7 @@ from sqlalchemy import Column, Integer, String, BigInteger, Boolean, DateTime
 from database.models.base import BaseModel
 
 
-class GroupStateEnum(Enum):
+class GroupState(Enum):
     PENDING_CONFIRMATION = 'WAITING_FOR_CHECK'
     ACTIVE = 'ACTIVE'
     INACTIVE = 'INACTIVE' # ЕСЛИ НЕ ПОДПИСАН НА НЕЕ9
@@ -31,9 +31,9 @@ class GroupStateEnum(Enum):
 class GroupModel(BaseModel):
     __tablename__ = 'groups'
     id = Column(Integer, primary_key=True, index=True)
-    state = Column(String(64), default=GroupStateEnum.PENDING_CONFIRMATION)
+    state = Column(String(64), default=GroupState.PENDING_CONFIRMATION)
 
-    chat_id = Column(BigInteger, unique=True)
+    tg_group_id = Column(BigInteger, unique=True)
     username = Column(String(256))
     subscribers = Column(Integer, default=0)
     have_capcha = Column(Boolean, default=False)

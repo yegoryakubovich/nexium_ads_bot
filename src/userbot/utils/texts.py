@@ -21,7 +21,7 @@ from pydantic import BaseModel
 
 
 class Texts(BaseModel):
-    pass
+    task_completed: str
 
 
 with open('texts.json', 'r', encoding='utf-8') as file:

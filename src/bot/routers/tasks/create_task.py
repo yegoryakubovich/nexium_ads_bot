@@ -15,7 +15,7 @@
 #
 
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from random import choice, random
 
 from aiogram import Bot
@@ -104,6 +104,8 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
             )
 
     ad_message_url = f'https://t.me/{ad.group_username}/{ad_message.message_id}'
+    datetime_ = datetime.utcnow()
+    expiration_datetime = datetime_+timedelta(hours=1)
     task = await task_repo.create(
         obj_in={
             'ad_id': ad.id,
@@ -114,7 +116,8 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
             'image': ad_image,
             'have_keyboard': False if ad_keyboard is None else True,
             'message_url': ad_message_url,
-            'datetime': datetime.utcnow(),
+            'datetime': datetime_,
+            'expiration_datetime': expiration_datetime,
         }
     )
     await message.answer(
