@@ -60,6 +60,7 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
                 next_refill_m=next_refill_m,
                 admin_username=ADMIN_USERNAME,
             ),
+            protect_content=False,
         )
         return
 

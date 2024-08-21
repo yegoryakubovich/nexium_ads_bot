@@ -43,4 +43,5 @@ async def create_withdrawal(message: Message, session: AsyncSession) -> None:
             balance=user.balance,
             admin_username=ADMIN_USERNAME,
         ),
+        protect_content=False,
     )
