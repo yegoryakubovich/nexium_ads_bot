@@ -19,7 +19,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from telethon.events import NewMessage
-from telethon.tl.types import PeerChannel, Message
+from telethon.tl.types import PeerChannel, Message, PeerUser
 
 from database.database import db_session
 from database.models.task import TaskState
@@ -35,6 +35,9 @@ async def new_message(event: NewMessage.Event, session: AsyncSession):
     message: Message
 
     if not isinstance(message.peer_id, PeerChannel):
+        return
+
+    if not isinstance(message.from_id, PeerUser):
         return
 
     tg_user_id = message.from_id.user_id
