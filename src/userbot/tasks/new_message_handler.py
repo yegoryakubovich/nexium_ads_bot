@@ -34,11 +34,11 @@ async def new_message(event: NewMessage.Event, session: AsyncSession):
     message = event.message
     message: Message
 
-    tg_user_id = message.from_id.user_id
-    tg_id = int(f'-100{message.peer_id.channel_id}')
-
     if not isinstance(message.peer_id, PeerChannel):
         return
+
+    tg_user_id = message.from_id.user_id
+    tg_id = int(f'-100{message.peer_id.channel_id}')
 
     user_repo = UserRepository(session=session)
     user = await user_repo.get_by(obj_in={'tg_user_id': tg_user_id})
