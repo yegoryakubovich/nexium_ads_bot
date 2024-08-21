@@ -15,31 +15,22 @@
 #
 
 
-from asyncio import run, create_task, gather
-
-from telethon import events
-
-from tasks.checking_groups import checking_groups
-from tasks.new_message_handler import new_message
-from tasks.task_1 import task_1
-from utils.userbot import userbot
+from telethon.tl.types import Chat, Channel, User
 
 
-TASKS = [
-    task_1,
-    checking_groups,
-]
+def entity_to_tg_id(entity: Chat | User | Channel):
+    id_ = entity.id
+
+    if isinstance(entity, Chat):
+        return int(f'-{id_}')
+    elif isinstance(entity, Channel):
+        return int(f'-100{id_}')
+    else: # User
+        return id_
 
 
-async def main():
-    userbot.add_event_handler(callback=new_message, event=events.NewMessage)
-
-    await userbot.start()
-
-    tasks = [create_task(task(userbot=userbot)) for task in TASKS]
-    await gather(*tasks)
-
-    await userbot.run_until_disconnected()
-
-
-run(main())
+def is_supergroup(entity: Chat | User | Channel):
+    if isinstance(entity, Channel):
+        return entity.broadcast or entity.megagroup
+    else:
+        return False

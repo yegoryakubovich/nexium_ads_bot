@@ -35,13 +35,11 @@ router = Router(name=__name__)
 @db_session
 async def add_groups(message: Message, session: AsyncSession) -> None:
     tg_user_id = message.from_user.id
-    print(message)
     if tg_user_id != ADMIN_TG_USER_ID:
         return
 
     try:
         groups_str = message.text.replace('/add_groups ', '')
-        print(groups_str)
         groups = loads(groups_str)
 
         if not isinstance(groups, list) or not all(isinstance(group, str) for group in groups):

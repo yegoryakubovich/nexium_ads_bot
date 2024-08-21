@@ -25,6 +25,7 @@ class AdModel(BaseModel):
     id = Column(Integer, primary_key=True, index=True)
     bot_token = Column(String(128))
     bot_username = Column(String(128))
+    bot_tg_id = Column(BigInteger)
     group_id = Column(BigInteger)
     group_username = Column(String(128))
     text_1 = Column(String(1024))

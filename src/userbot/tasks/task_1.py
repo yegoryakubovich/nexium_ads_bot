@@ -15,31 +15,13 @@
 #
 
 
-from asyncio import run, create_task, gather
+from asyncio import sleep
 
-from telethon import events
-
-from tasks.checking_groups import checking_groups
-from tasks.new_message_handler import new_message
-from tasks.task_1 import task_1
-from utils.userbot import userbot
+from telethon import TelegramClient
 
 
-TASKS = [
-    task_1,
-    checking_groups,
-]
 
+async def task_1(userbot: TelegramClient):
+    async for d in userbot.iter_dialogs():
+        await sleep(2)
 
-async def main():
-    userbot.add_event_handler(callback=new_message, event=events.NewMessage)
-
-    await userbot.start()
-
-    tasks = [create_task(task(userbot=userbot)) for task in TASKS]
-    await gather(*tasks)
-
-    await userbot.run_until_disconnected()
-
-
-run(main())

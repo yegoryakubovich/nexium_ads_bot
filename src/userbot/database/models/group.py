@@ -33,7 +33,7 @@ class GroupModel(BaseModel):
     id = Column(Integer, primary_key=True, index=True)
     state = Column(String(64), default=GroupState.PENDING_CONFIRMATION)
 
-    tg_group_id = Column(BigInteger, unique=True)
+    tg_id = Column(BigInteger, unique=True)
     username = Column(String(256))
     subscribers = Column(Integer, default=0)
     have_capcha = Column(Boolean, default=False)

@@ -81,7 +81,7 @@ async def create_task(message: Message, state: FSMContext, session: AsyncSession
     ) if random() < 0.6 else None
 
     groups = await group_repo.get_all_by(obj_in={'state': GroupState.ACTIVE})
-    group = choice(groups)
+    group = choice(groups) # await group_repo.get_by_id(id_=122)
 
     async with Bot(
         token=ad.bot_token,

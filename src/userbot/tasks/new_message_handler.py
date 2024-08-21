@@ -15,13 +15,11 @@
 #
 
 
-import logging
 from datetime import datetime
 
-from pyrogram import Client
-from pyrogram.enums import ChatType
-from pyrogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
+from telethon.events import NewMessage
+from telethon.tl.types import PeerChannel, Message
 
 from database.database import db_session
 from database.models.task import TaskState
@@ -32,11 +30,14 @@ from utils.bot import bot
 
 
 @db_session
-async def new_message(client: Client, message: Message, session: AsyncSession):
-    tg_user_id = message.from_user.id
-    tg_group_id = message.chat.id
+async def new_message(event: NewMessage.Event, session: AsyncSession):
+    message = event.message
+    message: Message
 
-    if message.chat.type not in [ChatType.GROUP, ChatType.SUPERGROUP]:
+    tg_user_id = message.from_id.user_id
+    tg_id = int(f'-100{message.peer_id.channel_id}')
+
+    if not isinstance(message.peer_id, PeerChannel):
         return
 
     user_repo = UserRepository(session=session)
@@ -54,25 +55,20 @@ async def new_message(client: Client, message: Message, session: AsyncSession):
     if not tasks:
         return
 
-    logging.warning(message)
-
     for task in tasks:
-        if message.forward_from.username != task.ad.bot_username:
+        if not message.fwd_from or message.fwd_from.from_id.user_id != task.ad.bot_tg_id:
             continue
 
-        if task.group.tg_group_id != tg_group_id:
+        if task.group.tg_id != tg_id:
             continue
 
         if task.text:
-            if task.image:
-                if task.text != message.caption:
-                    continue
-            else:
-                if task.text != message.text:
-                    continue
+            if task.text != message.message:
+                continue
 
+        # FIXME
         if task.image:
-            if message.photo is None:
+            if not message.media:
                 continue
 
         await task_repo.update(

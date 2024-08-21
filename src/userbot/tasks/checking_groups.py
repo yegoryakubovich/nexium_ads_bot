@@ -13,29 +13,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+
 from asyncio import sleep
 from random import choice, randint
 
-from pyrogram import Client
-from pyrogram.enums import ChatType
-from pyrogram.errors import UsernameNotOccupied, InviteRequestSent, UserNotParticipant
-from pyrogram.raw.functions.folders import EditPeerFolders
 from sqlalchemy.ext.asyncio import AsyncSession
+from telethon import TelegramClient
+from telethon.errors import InviteRequestSentError
+from telethon.tl.functions.channels import JoinChannelRequest
+from telethon.tl.types import InputChannel
 
 from database.database import db_session
 from database.models.group import GroupState, GroupModel
 from database.repositories.group import GroupRepository
+from tasks.update_folders import update_folders
+from tg_utils.ids import entity_to_tg_id
 
 
-async def check_group(client: Client, session: AsyncSession):
+async def check_group(userbot: TelegramClient, session: AsyncSession):
     group_repo = GroupRepository(session=session)
     groups = await group_repo.get_all_by(obj_in={'state': GroupState.PENDING_CONFIRMATION})
     group_to_check = choice(groups)
     group_to_check: GroupModel
 
     try:
-        chat = await client.get_chat(chat_id=group_to_check.username)
-    except UsernameNotOccupied:
+        group = await userbot.get_entity(entity=group_to_check.username)
+    except ValueError:
         await group_repo.update(
             id_=group_to_check.id,
             obj_in={
@@ -44,37 +48,39 @@ async def check_group(client: Client, session: AsyncSession):
         )
         return
 
-    if not chat:
-        return
-    if chat.type not in [ChatType.GROUP, ChatType.SUPERGROUP]:
-        return
-    if not chat.username:
-        return
-
-    try:
-        await client.get_chat_member(chat_id=chat.id, user_id='me')
-    except UserNotParticipant:
+    participants  = await userbot.get_participants(group)
+    me = await userbot.get_me()
+    if not me in participants:
         try:
-            await client.join_chat(chat_id=chat.username)
-        except InviteRequestSent:
-            return
-        except:
+            await userbot(
+                JoinChannelRequest(
+                    channel=InputChannel(
+                        channel_id=group.id,
+                        access_hash=group.access_hash,
+                    ),
+                ),
+            )
+        except InviteRequestSentError:
             return
 
+    subscribers = 0
+
+    tg_id = entity_to_tg_id(entity=group)
     await group_repo.update(
         id_=group_to_check.id,
         obj_in={
             'state': GroupState.ACTIVE,
-            'tg_group_id': chat.id,
-            'username': chat.username,
-            'subscribers': chat.members_count,
+            'tg_id': tg_id,
+            'username': group.username,
+            'subscribers': subscribers,
         },
     )
+    await update_folders(userbot=userbot, session=session)
 
 
 @db_session
-async def checking_groups(app: Client, session: AsyncSession):
+async def checking_groups(userbot: TelegramClient, session: AsyncSession):
     while True:
-        await check_group(client=app, session=session)
+        await check_group(userbot=userbot, session=session)
         await sleep(randint(180, 320))
 
